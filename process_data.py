@@ -44,6 +44,10 @@ def parse_address(address: str) -> Tuple[str, str, str] | None:
     return city, street, house_number
 
 
+def parse_free_address(raw_address: str) -> str:
+    return ' '.join(raw_address.split(', ')[1:]).replace('г. ', '')
+
+
 def process_name(old_name: str) -> str:
     return old_name.replace('ё', 'е').replace('-', '').lower()
 

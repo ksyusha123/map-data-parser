@@ -1,7 +1,7 @@
 import json
 from typing import List
 
-from osm_requests import get_osm_info_by_parsed_address
+from osm_requests import get_osm_info_by_parsed_address, get_osm_info_by_free_address
 from process_data import *
 
 
@@ -20,8 +20,21 @@ def process_okn_object(obj, okn_objects_with_unusual_address,
     raw_address = obj["Полный адрес"]
     parsed_address = parse_address(raw_address)
     if not parsed_address:
-        print(raw_address)
-        okn_objects_with_unusual_address.append(obj)
+        if raw_address == 'Свердловская область, г. Екатеринбург':
+            okn_objects_with_unusual_address.append(obj)
+        else:
+            parsed_address = parse_free_address(raw_address)
+            osm_info = get_osm_info_by_free_address(parsed_address)
+            features = osm_info['features']
+            if len(features) == 1:
+                valid_geojson_objects.append(features[0])
+            else:
+                if 'пл. ' in parsed_address:
+                    for feature in features:
+                        if feature['properties']['type'] == 'square':
+                            valid_geojson_objects.append(feature)
+                            return
+                okn_objects_with_unusual_address.append(obj)
         return
 
     city, street, house_number = parsed_address
