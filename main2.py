@@ -1,53 +1,8 @@
 import json
-import re
-import requests
-from typing import Tuple, List
+from typing import List
 
-categories = []
-
-
-def get_osm_info_by_parsed_address(city: str, street: str, house_number: str) -> dict:
-    address = f"{house_number} {street}"
-    response = requests.get(f'https://nominatim.openstreetmap.org/'
-                            'search?'
-                            f'street={address}&city={city}'
-                            '&format=geojson')
-    return response.json()
-
-
-def get_osm_info_by_free_address(address: str) -> dict:
-    response = requests.get(f'https://nominatim.openstreetmap.org/'
-                            'search?'
-                            f'q={address}'
-                            '&format=geojson')
-    return response.json()
-
-
-def process_house_number(raw_house_number: str) -> str:
-    return raw_house_number.replace('д. ', '')
-
-
-def process_street(raw_street: str) -> str:
-    return raw_street.replace('ул. ', '')
-
-
-def process_city(raw_city: str) -> str:
-    return raw_city.replace('г. ', '')
-
-
-def parse_address(address: str) -> Tuple[str, str, str] | None:
-    parts = address.split(', ')
-    if len(parts) != 4:
-        return None
-
-    region, raw_city, raw_street, raw_house_number = \
-        parts[0], parts[1], parts[2], parts[3]
-
-    city = process_city(raw_city)
-    street = process_street(raw_street)
-    house_number = process_house_number(raw_house_number)
-
-    return city, street, house_number
+from osm_requests import get_osm_info_by_parsed_address
+from process_data import *
 
 
 def write_json_objects_to_file(json_objects: List, filename: str):
@@ -56,15 +11,6 @@ def write_json_objects_to_file(json_objects: List, filename: str):
         string_object = string_object.encode('latin-1').decode(
             'unicode_escape')
         file.write(string_object)
-
-
-def process_name(old_name: str) -> str:
-    return old_name.replace('ё', 'е').replace('-', '').lower()
-
-
-def has_house_street_structure(name: str, street: str, house_number: str) -> bool:
-    return re.search(rf"{house_number}, [улица |проспект |набережная ]*"
-                     rf"{street}", name) is not None
 
 
 def process_okn_object(obj, okn_objects_with_unusual_address,
@@ -76,8 +22,8 @@ def process_okn_object(obj, okn_objects_with_unusual_address,
     if not parsed_address:
         okn_objects_with_unusual_address.append(obj)
         return
-    city, street, house_number = parsed_address
 
+    city, street, house_number = parsed_address
     osm_info = get_osm_info_by_parsed_address(city, street, house_number)
     features = []
     house_number = house_number.lower()
@@ -106,7 +52,6 @@ def process_okn_object(obj, okn_objects_with_unusual_address,
         found_needed_category = False
         for feature in features:
             category = feature['properties']['category']
-            categories.append(category)
 
             if category == 'historic':
                 valid_geojson_objects.append(feature)
