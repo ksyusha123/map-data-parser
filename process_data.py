@@ -16,13 +16,21 @@ def process_city(raw_city: str) -> str:
 
 def parse_address(address: str) -> Tuple[str, str, str] | None:
     address = address.lower()
+
+    address = re.sub(r'\/.*', '', address)
+
     tokens = address.split(', ')
 
     if len(tokens) >= 3 and 'район' in tokens[2]:
         tokens.pop(2)
 
-    if len(tokens) >= 5 and 'литер' in tokens[4]:
-        tokens = tokens[:4]
+    if len(tokens) >= 5:
+        if 'литер' in tokens[4]:
+            tokens = tokens[:4]
+        elif 'корп.' in tokens[4]:
+            num = tokens[4].split(' ')[1].split(', ')[0]
+            tokens[3] += f'/{num}'
+            tokens = tokens[:4]
 
     if len(tokens) != 4:
         return None

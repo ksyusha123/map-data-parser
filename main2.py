@@ -20,6 +20,7 @@ def process_okn_object(obj, okn_objects_with_unusual_address,
     raw_address = obj["Полный адрес"]
     parsed_address = parse_address(raw_address)
     if not parsed_address:
+        print(raw_address)
         okn_objects_with_unusual_address.append(obj)
         return
 
