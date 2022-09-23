@@ -110,13 +110,13 @@ def main(filepath: str):
                                too_many_features_and_nothing_found)
 
     write_json_objects_to_file(valid_geojson_objects,
-                               '../valid_geojson_objects.json')
+                               'valid_geojson_objects.json')
     write_json_objects_to_file(okn_objects_with_unusual_address,
-                               '../okn_objects_with_unusual_address.json')
+                               'okn_objects_with_unusual_address.json')
     write_json_objects_to_file(objects_without_concrete_building,
-                               '../objects_without_concrete_building.json')
+                               'objects_without_concrete_building.json')
     write_json_objects_to_file(too_many_features_and_nothing_found,
-                               '../too_many_features_and_nothing_found.json')
+                               'too_many_features_and_nothing_found.json')
 
     print_stats(valid_geojson_objects, okn_objects_with_unusual_address,
                 objects_without_concrete_building, too_many_features_and_nothing_found)
