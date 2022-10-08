@@ -27,11 +27,19 @@ def process_okn_object(obj, okn_objects_with_unusual_address,
             osm_info = get_osm_info_by_free_address(parsed_address)
             features = osm_info['features']
             if len(features) == 1:
+                features[0]['data'] = {}
+                features[0]['data']['address'] = raw_address
+                features[0]['data']['name'] = obj["Объект"]
+                features[0]['data']['okn_number'] = obj["Номер в реестре"]
                 valid_geojson_objects.append(features[0])
             else:
                 if 'пл. ' in parsed_address:
                     for feature in features:
                         if feature['properties']['type'] == 'square':
+                            feature['data'] = {}
+                            feature['data']['address'] = raw_address
+                            feature['data']['name'] = obj["Объект"]
+                            feature['data']['okn_number'] = obj["Номер в реестре"]
                             valid_geojson_objects.append(feature)
                             return
                 okn_objects_with_unusual_address.append(obj)
@@ -45,6 +53,10 @@ def process_okn_object(obj, okn_objects_with_unusual_address,
 
     object_features = osm_info['features']
     if len(object_features) == 1:
+        object_features[0]['data'] = {}
+        object_features[0]['data']['name'] = obj["Объект"]
+        object_features[0]['data']['address'] = raw_address
+        object_features[0]['data']['okn_number'] = obj["Номер в реестре"]
         valid_geojson_objects.append(object_features[0])
         return
 
@@ -60,6 +72,10 @@ def process_okn_object(obj, okn_objects_with_unusual_address,
         objects_without_concrete_building.append(obj)
 
     elif len(features) == 1:
+        features[0]['data'] = {}
+        features[0]['data']['name'] = obj["Объект"]
+        features[0]['data']['okn_number'] = obj["Номер в реестре"]
+        features[0]['data']['address'] = raw_address
         valid_geojson_objects.append(features[0])
 
     else:
@@ -68,10 +84,18 @@ def process_okn_object(obj, okn_objects_with_unusual_address,
             category = feature['properties']['category']
 
             if category == 'historic':
+                feature['data'] = {}
+                feature['data']['name'] = obj["Объект"]
+                feature['data']['okn_number'] = obj["Номер в реестре"]
+                feature['data']['address'] = raw_address
                 valid_geojson_objects.append(feature)
                 found_needed_category = True
                 break
             if category == 'building':
+                feature['data'] = {}
+                feature['data']['name'] = obj["Объект"]
+                feature['data']['okn_number'] = obj["Номер в реестре"]
+                feature['data']['address'] = raw_address
                 valid_geojson_objects.append(feature)
                 found_needed_category = True
                 break
@@ -122,5 +146,24 @@ def main(filepath: str):
                 objects_without_concrete_building, too_many_features_and_nothing_found)
 
 
+def add_info_in_file(filepath1, filepath2):
+    with open(filepath1, encoding='utf-8') as f:
+        all_okn_objects = json.load(f)
+        for obj in all_okn_objects:
+            number = obj['data']['okn_number']
+            with open(filepath2, encoding='utf-8') as f2:
+                data_obj = json.load(f2)
+                for d in data_obj:
+                    if d["Номер в реестре"] == number:
+                        obj['data']['name'] = obj['data']['name'].replace('"', '\\"')
+                        obj['data']['type'] = d["Вид объекта"]
+                        obj['data']['date'] = d["дата создания"]
+                        obj['data']['category'] = d["Категория историко-культурного значения"]
+    write_json_objects_to_file(all_okn_objects,
+                               'valid_geojson_objects2.json')
+
+
+
 if __name__ == '__main__':
+    #add_info_in_file('valid_geojson_objects.json', 'data_okn.json')
     main('data_okn.json')
