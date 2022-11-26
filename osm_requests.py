@@ -16,3 +16,11 @@ def get_osm_info_by_free_address(address: str) -> dict:
                             f'q={address}'
                             '&format=geojson')
     return response.json()
+
+
+def get_osm_info_by_id(id: str, type: str) -> dict:
+    response = requests.get(f'https://nominatim.openstreetmap.org/details?'
+                            f'osmid={id}'
+                            f'&osmtype={type}'
+                            '&format=json')
+    return response.json()
