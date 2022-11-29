@@ -3,18 +3,21 @@ from __future__ import annotations
 import json
 
 import requests
+from datetime import datetime
 
 from strapi_requests import post_new_dtp_object, strapi_login
 
 
 def download_file():
-    response = requests.get('https://cms.dtp-stat.ru/media/opendata/sverdlovskaia-oblast.geojson')
+    response = requests.get('http://cms.dtp-stat.ru/media/opendata/sverdlovskaia-oblast.geojson')
     return response.json()
 
 
-def parse_dtp(mm: str, filename=None):
+def parse_dtp(mm=None, filename=None):
     token = strapi_login()['jwt']
     object_to_file = []
+    if mm is None:
+        mm = datetime.now().month - 1
     if filename is not None:
         with open(filename, encoding='utf-8') as file:
             all_dtps = json.load(file)
