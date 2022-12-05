@@ -1,3 +1,5 @@
+import re
+
 import requests
 
 
@@ -24,3 +26,17 @@ def get_osm_info_by_id(id: str, type: str) -> dict:
                             f'&osmtype={type}'
                             '&format=json')
     return response.json()
+
+
+def get_osm_info_nodes(id: str, type: str) -> dict:
+    ans = []
+    pattern = r'<nd ref="(\d+?)"/>'
+    response = requests.get(f'https://www.openstreetmap.org/api/0.6/{type}/{id}?xhr=1')
+    match = re.findall(pattern, response.text)
+    if match is not None:
+        for i in match:
+            new_response = requests.get(f'https://www.openstreetmap.org/api/0.6/node/{i}?xhr=1')
+            other_pattern = r'lat="([\d\.]+?)" lon="([\d\.]+?)"'
+            coord = re.findall(other_pattern, new_response.text)
+            ans.append([coord[0][1], coord[0][0]])
+    return ans
