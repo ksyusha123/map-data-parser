@@ -18,7 +18,7 @@ def post_new_dtp_object(bearer: str, data: str) -> dict:
         ('User-Agent',
          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.56')
     ])
-    response = requests.post(f'http://51.178.191.76:1337/content-manager/collection-types/api::dtp.dtp', json=data,
+    response = requests.post(f'http://51.178.191.76:1337/api/dtps', json={"data": data},
                              headers=headers)
     return response.json()
 
