@@ -1,6 +1,6 @@
 import json
 
-from main import write_json_objects_to_file
+from main import write_json_objects_to_file, req
 
 
 def add_info_in_file(filepath1, filepath2):
@@ -15,3 +15,5 @@ def add_info_in_file(filepath1, filepath2):
                         obj['data']['document'] = d["наименование документа"].replace('"', '\'')
     write_json_objects_to_file(all_okn_objects,
                                'okn/valid_geojson_objects.json')
+
+
