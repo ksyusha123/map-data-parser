@@ -5,15 +5,18 @@ def parse_dtp():
     count = 1
     object_to_file = []
     object_without_address = []
-    with open("C:\\Users\\79022\\Downloads\\sverdlovskaia-oblast (1).json", encoding='utf-8') as file:
-        all_dtps = json.load(file)
+    with open("C:\\Users\\79022\\Downloads\\sverdlovskaia-oblast (3).json", encoding='utf-8') as file:
+        all_dtps = json.load(file)['features']
         for dtp in all_dtps:
             if not(dtp["properties"]["region"] is None):
                 if "Екатеринбург" in dtp["properties"]["region"]:
-                    object_to_file.append(dtp)
+                    dtp_obj = {}
+                    dtp_obj = dtp['properties']
+                    dtp_obj['geometry'] = dtp['geometry']
+                    object_to_file.append(dtp_obj)
             else:
                 object_without_address.append(dtp)
-            if len(object_to_file) == 250:
+            if len(object_to_file) == 300:
                 with open(f"dtp_ekb_{count}.json", 'w', encoding='utf-8') as file_to_write:
                     string_object = json.dumps(object_to_file, indent=4)
                     string_object = string_object.encode('latin-1').decode(

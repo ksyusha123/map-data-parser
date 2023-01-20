@@ -39,4 +39,7 @@ def filter_data(all_dtps, yyyy, mm, object_to_file):
     for dtp in all_dtps:
         if dtp["properties"]["region"] is not None:
             if "Екатеринбург" in dtp["properties"]["region"] and f'{yyyy}-{mm}' in dtp["properties"]["datetime"]:
-                object_to_file.append(dtp)
+                dtp_obj = {}
+                dtp_obj = dtp['properties']
+                dtp_obj['geometry'] = dtp['geometry']
+                object_to_file.append(dtp_obj)
