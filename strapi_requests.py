@@ -11,7 +11,7 @@ def post_new_dtp_object(bearer: str, data: str) -> dict:
         ('Authorization', f'Bearer {bearer}'),
         ('Content-Type', 'application/json')
     ])
-    response = requests.post(f'http://51.178.191.76:1337/api/dtps', json={"data": data},
+    response = requests.post(f'https://map-api.ekaterinburg.io/api/dtps', json={"data": data},
                              headers=headers)
     return response.json()
 
@@ -29,7 +29,7 @@ def put_object(bearer: str, data: str, id_obj: str) -> dict:
         ('User-Agent',
          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.56')
     ])
-    response = requests.put(f'http://51.178.191.76:1337/content-manager/collection-types/api::houses.houses/{id_obj}',
+    response = requests.put(f'https://map-api.ekaterinburg.io/api/house/{id_obj}',
                             json=data,
                             headers=headers)
     return response.json()
@@ -40,7 +40,7 @@ def post_house_object(bearer: str, data: str) -> dict:
         ('Authorization', f'Bearer {bearer}'),
         ('Content-Type', 'application/json'),
     ])
-    response = requests.post(f'http://51.178.191.76:1337/content-manager/collection-types/api::houses.houses',
+    response = requests.post(f'https://map-api.ekaterinburg.io/api/house',
                              json=data,
                              headers=headers)
     return response.json()
@@ -62,6 +62,6 @@ def get_object(bearer: str, data: str) -> dict:
     ])
     response = \
         requests.get(
-            f'http://51.178.191.76:1337/content-manager/collection-types/api::houses.houses?filters[CoordinatesHash][$contains]={data}&pagination[pageSize]=10000',
+            f'https://map-api.ekaterinburg.io/api/house?filters[CoordinatesHash][$contains]={data}&pagination[pageSize]=10000',
             headers=headers)
     return response.json()
