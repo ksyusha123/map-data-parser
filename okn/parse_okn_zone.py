@@ -3,8 +3,8 @@ from main import write_json_objects_to_file
 
 
 def parse_okn_zone():
-    print(1)
-    with open('C:\\Users\\79022\\Downloads\\Telegram Desktop\\okn_obj_and_borders\\okn_zashit.json', encoding='utf-8') as f:
+    path_to_file_zone = ''
+    with open(path_to_file_zone, encoding='utf-8') as f:
         all_objects = json.load(f)
         all_f = []
         for obj in all_objects:

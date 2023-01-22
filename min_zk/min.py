@@ -31,7 +31,8 @@ def get_house_ids():
 
 
 def get_house_data_from_site():
-    with open("C:\\Users\\79022\\map-data-parser\\min_zk\\minIdsRes2", encoding='utf-8') as f:
+    path_to_file = ""
+    with open(path_to_file, encoding='utf-8') as f:
         list_d = []
         k = 1
         for line in f:
@@ -87,18 +88,18 @@ def get_house_data_from_site():
             list_d.append(d)
             print(k)
             k += 1
-        with open("C:\\Users\\79022\\map-data-parser\\min_zk\\minIdsRes2", 'a', encoding='utf-8') as file:
-            file.write(json.dumps(list_d, indent=4).encode('latin-1').decode(
+        f.write(json.dumps(list_d, indent=4).encode('latin-1').decode(
                 'unicode_escape'))
 
 
 def get_data_from_osm_and_write_to_files():
     k = 1
+    path_to_file = ''
     geojson_objects = []
     geojson_objects_fail = []
     geojson_objects_not_found = []
     geojson_objects_many = []
-    with open("C:\\Users\\79022\\map-data-parser\\min_zk\\minIdsRes4", encoding='utf-8') as file:
+    with open(path_to_file, encoding='utf-8') as file:
         all_houses = json.load(file)
         for house in all_houses:
             try:
@@ -212,8 +213,10 @@ def add_info(geojson_objects, geojson_objects_fail, house, object_feature):
 
 
 def add_geo():
-    with open('C:\\Users\\79022\\map-data-parser\\min_zk\\center.json', 'r', encoding='utf-8') as constructions:
-        with open('C:\\Users\\79022\\map-data-parser\\only1.json', 'r', encoding='utf-8') as only:
+    path_to_min_zkh_file = ''
+    path_to_file = ''
+    with open(path_to_min_zkh_file, 'r', encoding='utf-8') as constructions:
+        with open(path_to_file, 'r', encoding='utf-8') as only:
             const_json = json.load(constructions).values()
             only_json = json.load(only)
             for only in only_json:
@@ -221,65 +224,7 @@ def add_geo():
                     if only['id'] == con['id']:
                         only['geometry'] = con['geometry']
 
-        with open('only1_new.json', 'w', encoding='utf-8') as file:
-            string_object = json.dumps(only_json, indent=4)
-            string_object = string_object.encode('latin-1').decode(
-                'unicode_escape')
-            file.write(string_object)
-
-
-def floors():
-    err_json = []
-    only_json = []
-    ex_json = []
-    ok_json = []
-    with open('C:\\Users\\79022\\map-data-parser\\api-center-construction.json', 'r',
-              encoding='utf-8') as constructions:
-        const_json = json.load(constructions).values()
-        for c_json in const_json:
-            for i in range(1, 19):
-                with open(f'C:\\Users\\79022\\map-data-parser\\min_zk\\geojson_objects{i}.json', 'r',
-                          encoding='utf-8') as min_zkh:
-                    min_zkh_json = json.load(min_zkh)
-                    for m_obj in min_zkh_json:
-                        try:
-                            if c_json['street'] is not None and m_obj['Address'] is not None and c_json[
-                                'house_number'] is not None and m_obj['Address'] is not None:
-                                if c_json['street'] in m_obj['Address'] and c_json['house_number'] in m_obj['Address']:
-                                    if c_json['floors'] is not None and m_obj['Floors'] is not None:
-                                        if c_json['floors'] == int(m_obj['Floors']):
-                                            ok_json.append(m_obj)
-                                        else:
-                                            err_json.append(m_obj)
-                                    elif c_json['floors'] is not None:
-                                        ok_json.append(c_json)
-                                    elif m_obj['Floors'] is not None:
-                                        ok_json.append(m_obj)
-                                else:
-                                    if i == 18:
-                                        only_json.append(c_json)
-                        except:
-                            ex_json.append(m_obj)
-                            continue
-        with open('ok.json', 'w', encoding='utf-8') as file:
-            string_object = json.dumps(ok_json, indent=4)
-            string_object = string_object.encode('latin-1').decode(
-                'unicode_escape')
-            file.write(string_object)
-
-        with open('err.json', 'w', encoding='utf-8') as file:
-            string_object = json.dumps(err_json, indent=4)
-            string_object = string_object.encode('latin-1').decode(
-                'unicode_escape')
-            file.write(string_object)
-
-        with open('ex.json', 'w', encoding='utf-8') as file:
-            string_object = json.dumps(ex_json, indent=4)
-            string_object = string_object.encode('latin-1').decode(
-                'unicode_escape')
-            file.write(string_object)
-
-        with open('only.json', 'w', encoding='utf-8') as file:
+        with open(path_to_file, 'w', encoding='utf-8') as file:
             string_object = json.dumps(only_json, indent=4)
             string_object = string_object.encode('latin-1').decode(
                 'unicode_escape')
@@ -288,7 +233,8 @@ def floors():
 
 def add_new():
     token = ""
-    with open('C:\\Users\\79022\\map-data-parser\\geojson_objects_182_12.json', encoding='utf-8') as file:
+    path_to_file = ''
+    with open(path_to_file, encoding='utf-8') as file:
         all_data = json.load(file)
         for data in all_data:
             try:
