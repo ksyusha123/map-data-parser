@@ -19,16 +19,8 @@ def post_new_dtp_object(bearer: str, data: str) -> dict:
 def put_object(bearer: str, data: str, id_obj: str) -> dict:
     headers = dict([
         ('Accept', 'application/json'),
-        ('Accept-Language', 'ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7'),
         ('Authorization', f'Bearer {bearer}'),
-        ('Cache-Control', 'no-cache'),
-        ('Connection', 'keep-alive'),
-        ('Content-Type', 'application/json'),
-        ('Origin', 'http://51.178.191.76:1337'),
-        ('Pragma', 'no-cache'),
-        ('User-Agent',
-         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.56')
-    ])
+        ('Content-Type', 'application/json')])
     response = requests.put(f'https://map-api.ekaterinburg.io/api/house/{id_obj}',
                             json=data,
                             headers=headers)

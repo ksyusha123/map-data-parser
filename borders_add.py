@@ -14,8 +14,10 @@ for idx, obj in enumerate(objects):
             object_id = obj['id']
             address = obj['attributes']['Address'].replace('пр-кт', '')
             address = address.replace('г. Екатеринбург,', '')
+            address = address.replace('Екатеринбург,', '')
             address = address.replace('ул. ', '')
-            address = address.replace('Свердловская область', '')
+            address = address.replace(',', '')
+            address = address.replace('Свердловская область', '').strip()
             features = get_osm_info_by_free_address(address)['features']
             for feature in features:
                 if feature['properties']['osm_type'] == 'way':
