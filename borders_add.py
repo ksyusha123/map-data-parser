@@ -10,9 +10,8 @@ objects = requests.get(f'{endpoint}?populate=borders&pagination[page]=1&paginati
 headers = {"Authorization": f"Bearer {token}"}
 for idx, obj in enumerate(objects):
     if 'borders' in obj['attributes']:
-        if 'пр-кт' in obj['attributes']['Address'] and obj['attributes']['borders'] is None:
             object_id = obj['id']
-            address = obj['attributes']['Address'].replace('пр-кт', '')
+            address = obj['attributes']['Address'].replace('пр-кт', 'проспект')
             address = address.replace('г. Екатеринбург,', '')
             address = address.replace('Екатеринбург,', '')
             address = address.replace('ул. ', '')
