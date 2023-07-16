@@ -41,5 +41,7 @@ def filter_data(all_dtps, yyyy, mm, object_to_file):
             if "Екатеринбург" in dtp["properties"]["region"] and f'{yyyy}-{mm}' in dtp["properties"]["datetime"]:
                 dtp_obj = {}
                 dtp_obj = dtp['properties']
-                dtp_obj['geometry'] = dtp['geometry']
+                dtp_obj['geometry'] = \
+                    {'coordinates': [dtp['geometry']['coordinates'][1], dtp['geometry']['coordinates'][0]],
+                     'type': 'Point'}
                 object_to_file.append(dtp_obj)
